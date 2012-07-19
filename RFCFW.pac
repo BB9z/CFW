@@ -21,6 +21,20 @@
  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE DATABASE AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE DATABASE, EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 */
 
+/* [索引]
+	配置段
+	大陆IP定义
+	
+	协议判定<广谱>
+	内网判定<广谱>
+	禁封规则
+	CN域名<广谱>
+	网址规则
+	IP直接访问<广谱>
+	域名不能被解析<广谱>
+	国内IP<广谱>
+	默认行为
+*/
 
 var DefaultLocalProxyPort = "9000";
 var P = "PROXY 127.0.0.1:" + DefaultLocalProxyPort + ", DIRECT";
@@ -41,36 +55,9 @@ var RFConfig = {
 	onlyEnableHTTP:	true				// 只在http/https协议下使用代理
 };
 
-function FindProxyForURL(url,host){
-	// 跳过非http协议，当配置为系统级别时有用
-	if (RFConfig.onlyEnableHTTP && (url.substring(0,4) != 'http')) {
-		return D;
-	}
-	
-	// 内网直接访问
-	if (isPlainHostName(host))					return D;
-	
-	// IP判断用函数
-	function isIPinDict(ip, dict) {
-		var ipArray = ip.split('.', 4);
-		var index  = parseInt(ipArray[0], 10);
-		var longIp = parseInt(ipArray[0], 10)*16777216 + parseInt(ipArray[1], 10)*65536 + parseInt(ipArray[2], 10)*256 + parseInt(ipArray[3], 10);
-		var table = dict['k'+index];
-		if (table) {
-			// console.log(table);
-			for (var i = table.length-1; i>=0; i=i-1) {
-				// console.log(table[i]);
-				if (longIp < table[i][1] && longIp > table[i][0]) {
-					return true;
-				}
-			}
-		}
-		return false;
-	};
-	
-	// 处理后的IP-to-Country数据，大陆及香港IP有近2000条
-	// 为减少每次匹配量打成散列
-	var CNAndHKIpDict = {};
+// 处理后的IP-to-Country数据，大陆及香港IP有近2000条
+// 为减少每次匹配量打成散列
+var CNAndHKIpDict = {};
 CNAndHKIpDict.k1	= [[17563648,17825791], [18350080,18874367], [19136512,19202047], [19726336,19791871], [19922944,20185087], [20447232,20971519], [20971520,21102591], [21233664,21495807], [22020096,23068671], [24379392,24641535], [28573696,28966911], [29097984,29884415], [30015488,30408703]];
 CNAndHKIpDict.k14	= [[234913792,234946559], [234951680,234952703], [235929600,236978175], [241605632,241606655], [241627136,241631231], [241631232,243269631], [243400704,243531775], [243662848,243793919], [243793920,243859455], [244318208,245366783], [247479296,247480319], [247726080,247857151], [247857152,247988223], [248250368,248381439], [248512512,249561087]];
 CNAndHKIpDict.k27	= [[453509120,455081983], [455344128,456130559], [456269824,456271871], [456294400,456327167], [456572928,456589311], [459456512,459460607], [459460608,459472895], [459542528,459544575], [459547648,459548671], [459735040,459800575], [459964416,459980799], [460210176,460214271], [460304256,460312575], [460324864,460341247], [460345344,460349439], [460423168,460439551], [460521472,460554239], [460598272,460599295], [460983296,460984319], [461287424,461307903], [461373440,461504511], [461626368,461627391], [462422016,462487551], [462684160,463470591], [465043456,467927039]];
@@ -163,6 +150,33 @@ CNAndHKIpDict.k220	= [[3697655808,3697672191], [3698327552,3698589695], [3700981
 CNAndHKIpDict.k221	= [[3707764736,3708600319], [3708616704,3708813311], [3715674112,3715678207], [3715760128,3715891199], [3715891200,3716153343], [3716218880,3716415487], [3716537536,3716537567], [3716538368,3716546559], [3716677632,3716808703], [3719036928,3719823359], [3720347648,3720859647], [3720863744,3723493375]];
 CNAndHKIpDict.k222	= [[3725590528,3730833407], [3732733952,3732799487], [3732832256,3732865023], [3732930560,3733979135], [3735027712,3735289855], [3735420928,3735551999], [3735552000,3739222015], [3740270592,3740925951]];
 CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629888,3742760959], [3743035392,3743039487], [3743130112,3743130367], [3743130368,3743130623], [3743135744,3743136767], [3743283200,3743284223], [3745513472,3749838847], [3749847040,3749855231], [3750756352,3752067071], [3752198144,3752329215], [3753902080,3754033151], [3754229760,3754295295], [3754295296,3754426367], [3754491904,3754688511], [3754950656,3755474943], [3755737088,3755868159], [3755978752,3755986943], [3755988992,3755990015], [3757047808,3757834239], [3757965312,3758063615], [3758063616,3758079999], [3758092288,3758093311]];
+
+function FindProxyForURL(url,host){
+	// 跳过非http协议，当配置为系统级别时有用
+	if (RFConfig.onlyEnableHTTP && (url.substring(0,4) != 'http')) {
+		return D;
+	}
+	
+	// 内网直接访问
+	if (isPlainHostName(host))					return D;
+	
+	// IP判断用函数
+	function isIPinDict(ip, dict) {
+		var ipArray = ip.split('.', 4);
+		var index  = parseInt(ipArray[0], 10);
+		var longIp = parseInt(ipArray[0], 10)*16777216 + parseInt(ipArray[1], 10)*65536 + parseInt(ipArray[2], 10)*256 + parseInt(ipArray[3], 10);
+		var table = dict['k'+index];
+		if (table) {
+			// console.log(table);
+			for (var i = table.length-1; i>=0; i=i-1) {
+				// console.log(table[i]);
+				if (longIp < table[i][1] && longIp > table[i][0]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	};
 	
 /* Block */
 
@@ -170,7 +184,7 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 	if (RFConfig.blockTracker) {
 		// 用Opera的同学还是别禁GA了，让世界听到我们的声音~
 		if (host == 'www.google-analytics.com')			return D;
-	
+
 		if (shExpMatch(url, 'http://analytics.*'))		return N;
 		if (shExpMatch(url, '*tracker.js'))				return N;
 	
@@ -198,6 +212,7 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 		// if (dnsDomainIs(host, 'doubleclick.net'))	return N;
 
 		if (dnsDomainIs(host, 'rubiconproject.com'))	return N;
+		if (host == 'ads.pubmatic.com')					return N;
 	}
 	
 	// Share
@@ -209,7 +224,7 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 		if (dnsDomainIs(host, 'jiathis.com'))			return N;
 		if (dnsDomainIs(host, 'addthis.com'))			return N;
 		
-		if (host == 'connect.facebook.net')				return N;
+		if(/^http\:\/\/www\.facebook\.com\/plugins\/like\.php/i.test(url))	return N;
 	}
 	
 	// 未分类
@@ -248,7 +263,7 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 
 	// CN域名直接连接
 	if (shExpMatch(url, '*.cn/*'))	return D;
-	if (shExpMatch(url, '*.kh/*'))	return D;
+	if (shExpMatch(url, '*.hk/*'))	return D;
 
 /* END @广谱直接连接规则 */
 
@@ -259,24 +274,28 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 	if (dnsDomainIs(host,'faxianla.com'))			return D;
 	if (dnsDomainIs(host,'115.com'))				return D;
 	if (dnsDomainIs(host,'v2ex.com'))				return D;
-
+	if (dnsDomainIs(host,'youku.com'))				return D;
+	
+	if (dnsDomainIs(host,'etao.com'))				return D;
+	if (dnsDomainIs(host,'taobao.com'))				return D;
 	
 /* END @国内服务 */
 
 	// CDNS
 	if (host == 'ajax.googleapis.com')				return H;
 	if (host == 'ajax.googleapis.com')				return H;
-	if (dnsDomainIs(host,'googleapis.com'))			return D;
+	if (dnsDomainIs(host, 'googleapis.com'))		return D;
 	
-	if (dnsDomainIs(host,'akamai.net'))				return D;
-	if (dnsDomainIs(host,'akamaihd.net'))			return D;
-	if (dnsDomainIs(host,'aspnetcdn.com'))			return D;
-	if (dnsDomainIs(host,'cloudfront.net'))			return D;
-	
+	if (dnsDomainIs(host, 'akamai.net'))			return D;
+	if (dnsDomainIs(host, 'akamaihd.net'))			return D;
+	if (dnsDomainIs(host, 'aspnetcdn.com'))			return D;
+	if (dnsDomainIs(host, 'cloudfront.net'))		return D;
+	if (shExpMatch(url, 'http://cdn.*'))			return D;
 	
 	// 基础服务
 	if (host == 'www.gravatar.com')					return D;
 	if (host == 'apis.google.com')					return H;
+	if (host == 's3.amazonaws.com')					return D;
 
 	// Search
 	if (host == 'www.baigoogledu.com')					return D;
@@ -290,6 +309,8 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 	if (host == 'accounts.google.com')					return H;
 	if (host == 'mail.google.com')						return H;
 	if (host == 'mail-attachment.googleusercontent.com')	return H;
+	if (host == 'plus.google.com')						return D;
+	if (dnsDomainIs(host, 'googleusercontent.com'))		return D;
 	
 	
 	// Twitter
@@ -303,6 +324,10 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 	if (host == 't.co')							return P;
 	if (host == 'goo.gl')						return P;
 
+	// facebook
+	if (dnsDomainIs(host,'fbcdn.net'))			return P;
+	if (dnsDomainIs(host,'facebook.net'))		return P;
+	if (dnsDomainIs(host,'facebook.com'))		return P;
 
 	// reddit
 	if (dnsDomainIs(host,'reddit.com'))			return D;
@@ -311,14 +336,19 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 
 	// Video
 	if (dnsDomainIs(host,'youtube.com'))		return P;
-	if (host == 'player.vimeo.com')				return P;
+	if (dnsDomainIs(host,'ytimg.com'))			return P;
+	if (dnsDomainIs(host,'vimeo.com'))			return P;
+	if (dnsDomainIs(host,'vimeocdn.com'))		return P;
 	
 	// 
 	if (dnsDomainIs(host,'microsoft.com'))		return D;
 	if (dnsDomainIs(host,'apple.com'))			return D;
 	if (dnsDomainIs(host,'deviantart.com'))		return D;
 	if (dnsDomainIs(host,'deviantart.net'))		return D;
-	
+	if (dnsDomainIs(host,'images-amazon.com'))	return D;
+	if (dnsDomainIs(host,'slidesharecdn.com'))	return D;
+	if (dnsDomainIs(host,'adobe.com'))			return D;
+
 	// developer
 	if (dnsDomainIs(host,'github.com'))			return D;
 	if (host == 'code.google.com')				return H;
@@ -326,19 +356,21 @@ CNAndHKIpDict.k223	= [[3741450240,3742367743], [3742367744,3742629887], [3742629
 	if (dnsDomainIs(host,'fsdn.net'))			return D;
 	if (host == 'cocoacontrols.com')			return P;
 	if (host == 'developers.google.com')		return D;
+	if (host == 'developers.android.com')		return D;
 
 	if (dnsDomainIs(host,'operaunite.com'))		return D;
 	if (dnsDomainIs(host,'infoq.com'))			return D;
 	if (host == 'xingongju.com')				return D;
 	if (host == 'link-server.opera.com')		return D;
 	if (host == 'www.downforeveryoneorjustme.com')	return D;
+	if (host == 'www.rescuetime.com')			return D;
 
 /* @行为检测 */
 	// IP直接访问
-	if (/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(host))	return D;
+	if (/^https?\:\/\/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(url))	return D;
 	
 	// 如果域名不能被解析则使用代理
-	// 不适用于ISP的域名劫持，Windows下可以使用DnsSpeeder解决劫持问题
+	// 不适用于ISP的域名劫持
 	if (!isResolvable(host)) return P;
 	
 	// 国内IP判断
