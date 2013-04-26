@@ -36,7 +36,7 @@
 	默认行为
 */
 
-var DefaultLocalProxyPort = "9000";
+var DefaultLocalProxyPort = "8080";
 var P = "PROXY 127.0.0.1:" + DefaultLocalProxyPort + ", DIRECT";
 var D = "DIRECT";
 // var N = "DENY"
