@@ -19,6 +19,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         if (argc < 2) {
             prinfHelp();
+            exit(0);
         }
     
         FILE *csvFile;
