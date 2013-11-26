@@ -12,14 +12,20 @@
 
 void prinfHelp () {
     printf("ip-to-country csv file converter.\n");
+    printf("v2 2013/11/26.\n");
     printf("usage: ip2cconvert source_file >> output_file.js\n");
 }
+
+NSString *const RuleDictName = @"CNAndHKIpDict";
+int RuleIndexIPStart = 2;
+int RuleIndexIPEnd = 3;
+int RuleIndexCountry = 4;
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         if (argc < 2) {
             prinfHelp();
-            exit(0);
+            exit(EXIT_SUCCESS);
         }
     
         FILE *csvFile;
@@ -28,7 +34,6 @@ int main(int argc, const char * argv[]) {
             exit(EXIT_FAILURE);
         }
         
-        NSString *dictName = @"CNAndHKIpDict";
         size_t restrictSize = 200;
         char *line = (char *)malloc(restrictSize+1);
         
@@ -37,18 +42,18 @@ int main(int argc, const char * argv[]) {
         while (getline(&line, &restrictSize, csvFile) != -1) {
             NSArray *fields = [[NSString stringWithCString:line encoding:NSUTF8StringEncoding] componentsSeparatedByString:@","];
             
-            NSString *cflag = [fields objectAtIndex:2];     // 地区标识
+            NSString *cflag = fields[RuleIndexCountry];     // 地区标识
             
             // 只关心大陆与香港的IP段
             if ([cflag isEqualToString:@"\"CN\""] || [cflag isEqualToString:@"\"HK\""]) {
-                long startIP = [[[fields objectAtIndex:0] substringFromIndex:1] longLongValue];
-                long endIP = [[[fields objectAtIndex:1] substringFromIndex:1] longLongValue];
+                long startIP = [[fields[RuleIndexIPStart] substringFromIndex:1] longLongValue];
+                long endIP = [[fields[RuleIndexIPEnd] substringFromIndex:1] longLongValue];
                 NSUInteger index = startIP/16777216;   // 256^3
                 
                 if (index != currentFirstIPIndex) {
                     // 结束旧的
                     if (segemntArrayInAIndex) {
-                        NSString *dictItem = [NSString stringWithFormat:@"%@.k%d\t= [%@];\n", dictName, currentFirstIPIndex, [segemntArrayInAIndex componentsJoinedByString:@", "]];
+                        NSString *dictItem = [NSString stringWithFormat:@"%@.k%lu\t= [%@];\n", RuleDictName, (unsigned long)currentFirstIPIndex, [segemntArrayInAIndex componentsJoinedByString:@", "]];
                         printf("%s", [dictItem cStringUsingEncoding:NSUTF8StringEncoding]);
                     }
                     
@@ -66,7 +71,7 @@ int main(int argc, const char * argv[]) {
             }
         }
         if (segemntArrayInAIndex) {
-            NSString *dictItem = [NSString stringWithFormat:@"%@.k%d\t= [%@];\n", dictName, currentFirstIPIndex, [segemntArrayInAIndex componentsJoinedByString:@", "]];
+            NSString *dictItem = [NSString stringWithFormat:@"%@.k%lu\t= [%@];\n", RuleDictName, (unsigned long)currentFirstIPIndex, [segemntArrayInAIndex componentsJoinedByString:@", "]];
             printf("%s", [dictItem cStringUsingEncoding:NSUTF8StringEncoding]);
         }
         fclose(csvFile);
