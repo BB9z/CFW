@@ -1,7 +1,7 @@
 /*!
 	RFCFW.pac
 	
-	(c) 2012 bb9z
+	(c) 2012-2013 BB9z
 	https://github.com/BB9z/CFW
 	
 	某些过时浏览器可能不支持Unicode编码的PAC文件，请尝试自行转换为ANSI
@@ -187,20 +187,21 @@ function FindProxyForURL(url,host){
 
 	// Tracker
 	if (RFConfig.blockTracker) {
-		// 用Opera的同学还是别禁GA了，让世界听到我们的声音~
-		if (host == 'www.google-analytics.com')			return D;
+		// 放行 GA
+		if (dnsDomainIs(host,'google-analytics.com'))	return D;
 
-		if (shExpMatch(url, 'http://analytics.*'))		return N;
-		if (shExpMatch(url, '*tracker.js'))				return N;
+		if (shExpMatch(url,'http://analytics.*'))		return N;
+		if (shExpMatch(url,'*tracker.js'))				return N;
 	
-		if (dnsDomainIs(host, 'cnzz.com'))				return N;
-		if (dnsDomainIs(host, 'vipcnzz.com'))			return N;
-		if (dnsDomainIs(host, 'quantcast.com'))			return N;
-		if (dnsDomainIs(host, 'jiankongbao.com'))		return N;
-		if (dnsDomainIs(host, '51yes.com'))				return N;
-		if (dnsDomainIs(host, '51.la'))					return N;
+		if (host == 'www.cnzz.com')						return D;
+		if (host == 'doc.cnzz.com')						return D;
+		if (dnsDomainIs(host,'cnzz.com'))				return N;
+		if (dnsDomainIs(host,'vipcnzz.com'))			return N;
+		if (dnsDomainIs(host,'quantcast.com'))			return N;
+		if (dnsDomainIs(host,'jiankongbao.com'))		return N;
+		if (dnsDomainIs(host,'51yes.com'))				return N;
+		if (dnsDomainIs(host,'51.la'))					return N;
 
-		
 		// baidu
 		if (host == 'hm.baidu.com')						return N;
 		if (host == 'pos.baidu.com')					return N;
@@ -216,7 +217,7 @@ function FindProxyForURL(url,host){
 	if (RFConfig.blockAd) {
 		// if (dnsDomainIs(host, 'doubleclick.net'))	return N;
 
-		if (dnsDomainIs(host, 'rubiconproject.com'))	return N;
+		if (dnsDomainIs(host,'rubiconproject.com'))		return N;
 		if (host == 'ads.pubmatic.com')					return N;
 	}
 	
@@ -225,9 +226,9 @@ function FindProxyForURL(url,host){
 		if (host == 'b.bshare.cn')						return N;
 		if (host == 'share.baidu.com')					return N;
 		if (host == 'l.addthiscdn.com')					return N;
-		if (dnsDomainIs(host, 'sharethis.com'))			return N;
-		if (dnsDomainIs(host, 'jiathis.com'))			return N;
-		if (dnsDomainIs(host, 'addthis.com'))			return N;
+		if (dnsDomainIs(host,'sharethis.com'))			return N;
+		if (dnsDomainIs(host,'jiathis.com'))			return N;
+		if (dnsDomainIs(host,'addthis.com'))			return N;
 		
 		if(/^http\:\/\/www\.facebook\.com\/plugins\/like\.php/i.test(url))	return N;
 	}
@@ -259,8 +260,6 @@ function FindProxyForURL(url,host){
 	if (dnsDomainIs(host, '6.cn'))					return N;
 	if (dnsDomainIs(host, 'wumii.com'))				return N;
 
-
-	
 /* END @Block */
 
 
@@ -274,37 +273,67 @@ function FindProxyForURL(url,host){
 
 
 /* 国内服务 */
-	if (dnsDomainIs(host,'baidu.com'))				return D;
-	if (dnsDomainIs(host,'zhihu.com'))				return D;
-	if (dnsDomainIs(host,'faxianla.com'))			return D;
-	if (dnsDomainIs(host,'115.com'))				return D;
 	if (dnsDomainIs(host,'v2ex.com'))				return D;
-	if (dnsDomainIs(host,'youku.com'))				return D;
-	
-	if (dnsDomainIs(host,'etao.com'))				return D;
-	if (dnsDomainIs(host,'taobao.com'))				return D;
+
 	
 /* END @国内服务 */
 
 	// CDNS
-	if (host == 'ajax.googleapis.com')				return H;
-	if (host == 'ajax.googleapis.com')				return H;
+	if (host == 'apis.google.com')					return H;
 	if (dnsDomainIs(host, 'googleapis.com'))		return D;
+	if (host == 'code.jquery.com')					return D;
 	
-	if (dnsDomainIs(host, 'akamai.net'))			return D;
-	if (dnsDomainIs(host, 'akamaihd.net'))			return D;
-	if (dnsDomainIs(host, 'aspnetcdn.com'))			return D;
-	if (dnsDomainIs(host, 'cloudfront.net'))		return D;
-	if (shExpMatch(url, 'http://cdn.*'))			return D;
+	if (dnsDomainIs(host,'akamai.net'))				return D;
+	if (dnsDomainIs(host,'akamaihd.net'))			return D;
+	if (dnsDomainIs(host,'aspnetcdn.com'))			return D;
+	if (dnsDomainIs(host,'cloudfront.net'))			return D;
+	if (dnsDomainIs(host,'edgekey.net'))			return D;
+	if (dnsDomainIs(host,'fastly.net'))				return D;
+	if (shExpMatch(url,'http://cdn.*'))				return D;
+	if (shExpMatch(url,'https://cdn.*'))			return D;
 	
 	// 基础服务
-	if (host == 'www.gravatar.com')					return D;
-	if (host == 'apis.google.com')					return H;
-	if (host == 's3.amazonaws.com')					return D;
+	if (dnsDomainIs(host,'amazonaws.com'))			return D;
+	if (dnsDomainIs(host,'disqus.com'))				return D;
+	if (dnsDomainIs(host,'disquscdn.com'))			return D;
+	if (dnsDomainIs(host,'gravatar.com'))			return D;
+	if (dnsDomainIs(host,'verisign.com'))			return D;
 
 	// Search
 	if (host == 'www.baigoogledu.com')					return D;
 	if (shExpMatch(url, 'https://duckduckgo.com/*'))	return D;
+	
+	// URL Shorter
+	if (host == 'goo.gl')						return P;
+	if (host == 'j.mp')							return P;
+	if (host == 't.co')							return P;
+	if (host == 'goo.gl')						return P;
+	
+	// Video
+	if (dnsDomainIs(host,'youtube.com'))		return P;
+	if (dnsDomainIs(host,'ytimg.com'))			return P;
+	if (dnsDomainIs(host,'vimeo.com'))			return P;
+	if (dnsDomainIs(host,'vimeocdn.com'))		return P;
+	
+	// developer
+	if (dnsDomainIs(host,'github.com'))			return D;
+	if (dnsDomainIs(host,'github.io'))			return D;
+	if (host == 'collector.githubapp.com')		return D;
+	if (host == 'code.google.com')				return H;
+	if (dnsDomainIs(host,'sourceforge.net'))	return D;
+	if (dnsDomainIs(host,'fsdn.net'))			return D;
+	if (host == 'cocoacontrols.com')			return P;
+	if (host == 'developers.google.com')		return D;
+	if (host == 'developers.android.com')		return D;
+	
+	// Apple
+	if (dnsDomainIs(host,'apple.com'))			return D;
+	if (dnsDomainIs(host,'icloud.com'))			return D;
+
+	// facebook
+	if (dnsDomainIs(host,'fbcdn.net'))			return P;
+	if (dnsDomainIs(host,'facebook.net'))		return P;
+	if (dnsDomainIs(host,'facebook.com'))		return P;
 
 	// Google
 	if (shExpMatch(url, 'http://www.google.com/*'))		return P;
@@ -314,61 +343,40 @@ function FindProxyForURL(url,host){
 	if (host == 'accounts.google.com')					return H;
 	if (host == 'mail.google.com')						return H;
 	if (host == 'mail-attachment.googleusercontent.com')	return H;
-	if (host == 'plus.google.com')						return D;
+	if (host == 'plus.google.com')						return P;
 	if (dnsDomainIs(host, 'googleusercontent.com'))		return D;
-	
-	
-	// Twitter
-	if (dnsDomainIs(host,'twitter.com'))		return P;
-	if (dnsDomainIs(host,'twimg.com'))			return P;
-	if (host == 'twitpic.com')					return P;
-	
-	// URL Shorter
-	if (host == 'goo.gl')						return P;
-	if (host == 'j.mp')							return P;
-	if (host == 't.co')							return P;
-	if (host == 'goo.gl')						return P;
-
-	// facebook
-	if (dnsDomainIs(host,'fbcdn.net'))			return P;
-	if (dnsDomainIs(host,'facebook.net'))		return P;
-	if (dnsDomainIs(host,'facebook.com'))		return P;
 
 	// reddit
 	if (dnsDomainIs(host,'reddit.com'))			return D;
 	if (dnsDomainIs(host,'redditmedia.com'))	return D;
 	if (host == 'www.redditstatic.com')			return D;
-
-	// Video
-	if (dnsDomainIs(host,'youtube.com'))		return P;
-	if (dnsDomainIs(host,'ytimg.com'))			return P;
-	if (dnsDomainIs(host,'vimeo.com'))			return P;
-	if (dnsDomainIs(host,'vimeocdn.com'))		return P;
 	
+	// Wiki media
+	if (host == 'beta.wikiversity.org')			return D;
+	if (host == 'www.mediawiki.org')			return D;
+	if (host == 'bits.wikimedia.org')			return D;
+	if (host == 'commons.wikimedia.org')		return D;
+	if (host == 'meta.wikimedia.org')			return D;
+	if (host == 'upload.wikimedia.org')			return D;
+
 	// 
-	if (dnsDomainIs(host,'microsoft.com'))		return D;
-	if (dnsDomainIs(host,'apple.com'))			return D;
+	if (dnsDomainIs(host,'adobe.com'))			return D;
 	if (dnsDomainIs(host,'deviantart.com'))		return D;
 	if (dnsDomainIs(host,'deviantart.net'))		return D;
+	if (dnsDomainIs(host,'evernote.com'))		return D;
 	if (dnsDomainIs(host,'images-amazon.com'))	return D;
-	if (dnsDomainIs(host,'slidesharecdn.com'))	return D;
-	if (dnsDomainIs(host,'adobe.com'))			return D;
-
-	// developer
-	if (dnsDomainIs(host,'github.com'))			return D;
-	if (host == 'code.google.com')				return H;
-	if (dnsDomainIs(host,'sourceforge.net'))	return D;
-	if (dnsDomainIs(host,'fsdn.net'))			return D;
-	if (host == 'cocoacontrols.com')			return P;
-	if (host == 'developers.google.com')		return D;
-	if (host == 'developers.android.com')		return D;
-
-	if (dnsDomainIs(host,'operaunite.com'))		return D;
 	if (dnsDomainIs(host,'infoq.com'))			return D;
+	if (dnsDomainIs(host,'microsoft.com'))		return D;
+	if (dnsDomainIs(host,'operaunite.com'))		return D;
+	if (dnsDomainIs(host,'paypal.com'))			return D;
+	if (dnsDomainIs(host,'paypalobjects.com'))	return D;
+	if (dnsDomainIs(host,'slidesharecdn.com'))	return D;
+	
 	if (host == 'xingongju.com')				return D;
 	if (host == 'link-server.opera.com')		return D;
 	if (host == 'www.downforeveryoneorjustme.com')	return D;
 	if (host == 'www.rescuetime.com')			return D;
+	if (dnsDomainIs(host,'bitcoinwisdom.com'))	return D;
 
 /* @行为检测 */
 	// IP直接访问
