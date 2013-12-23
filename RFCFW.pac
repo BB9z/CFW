@@ -192,13 +192,15 @@ function FindProxyForURL(url,host){
 
 		if (shExpMatch(url,'http://analytics.*'))		return N;
 		if (shExpMatch(url,'*tracker.js'))				return N;
-	
+		
 		if (host == 'www.cnzz.com')						return D;
 		if (host == 'doc.cnzz.com')						return D;
 		if (dnsDomainIs(host,'cnzz.com'))				return N;
 		if (dnsDomainIs(host,'vipcnzz.com'))			return N;
-		if (dnsDomainIs(host,'quantcast.com'))			return N;
+		if (dnsDomainIs(host,'histats.com'))			return N;
 		if (dnsDomainIs(host,'jiankongbao.com'))		return N;
+		if (host == 'lognormal.net')					return N;
+		if (dnsDomainIs(host,'quantcast.com'))			return N;
 		if (dnsDomainIs(host,'51yes.com'))				return N;
 		if (dnsDomainIs(host,'51.la'))					return N;
 
@@ -274,13 +276,11 @@ function FindProxyForURL(url,host){
 
 /* 国内服务 */
 	if (dnsDomainIs(host,'v2ex.com'))				return D;
-
 	
 /* END @国内服务 */
 
 	// CDNS
-	if (host == 'apis.google.com')					return H;
-	if (dnsDomainIs(host, 'googleapis.com'))		return D;
+	if (host == 'apis.google.com')					return D;
 	if (host == 'code.jquery.com')					return D;
 	
 	if (dnsDomainIs(host,'akamai.net'))				return D;
@@ -291,59 +291,50 @@ function FindProxyForURL(url,host){
 	if (dnsDomainIs(host,'fastly.net'))				return D;
 	if (shExpMatch(url,'http://cdn.*'))				return D;
 	if (shExpMatch(url,'https://cdn.*'))			return D;
+	if (shExpMatch(url,'*cdn.com/*'))				return D;
 	
 	// 基础服务
 	if (dnsDomainIs(host,'amazonaws.com'))			return D;
 	if (dnsDomainIs(host,'disqus.com'))				return D;
 	if (dnsDomainIs(host,'disquscdn.com'))			return D;
 	if (dnsDomainIs(host,'gravatar.com'))			return D;
+	if (dnsDomainIs(host,'typekit.net'))			return D;
 	if (dnsDomainIs(host,'verisign.com'))			return D;
+	
+	// File share
+	if (dnsDomainIs(host,'rapidgator.net'))			return D;
+	if (dnsDomainIs(host,'tusfiles.net'))			return D;
+	if (dnsDomainIs(host,'uploaded.net'))			return D;
 
 	// Search
 	if (host == 'www.baigoogledu.com')					return D;
 	if (shExpMatch(url, 'https://duckduckgo.com/*'))	return D;
 	
-	// URL Shorter
-	if (host == 'goo.gl')						return P;
-	if (host == 'j.mp')							return P;
-	if (host == 't.co')							return P;
-	if (host == 'goo.gl')						return P;
-	
-	// Video
-	if (dnsDomainIs(host,'youtube.com'))		return P;
-	if (dnsDomainIs(host,'ytimg.com'))			return P;
-	if (dnsDomainIs(host,'vimeo.com'))			return P;
-	if (dnsDomainIs(host,'vimeocdn.com'))		return P;
-	
 	// developer
 	if (dnsDomainIs(host,'github.com'))			return D;
 	if (dnsDomainIs(host,'github.io'))			return D;
 	if (host == 'collector.githubapp.com')		return D;
-	if (host == 'code.google.com')				return H;
-	if (dnsDomainIs(host,'sourceforge.net'))	return D;
+	if (host == 'code.google.com')				return D;
 	if (dnsDomainIs(host,'fsdn.net'))			return D;
-	if (host == 'cocoacontrols.com')			return P;
 	if (host == 'developers.google.com')		return D;
 	if (host == 'developers.android.com')		return D;
 	
 	// Apple
 	if (dnsDomainIs(host,'apple.com'))			return D;
 	if (dnsDomainIs(host,'icloud.com'))			return D;
-
-	// facebook
-	if (dnsDomainIs(host,'fbcdn.net'))			return P;
-	if (dnsDomainIs(host,'facebook.net'))		return P;
-	if (dnsDomainIs(host,'facebook.com'))		return P;
+	if (host == 'metrics.mzstatic.com')			return D;
 
 	// Google
-	if (shExpMatch(url, 'http://www.google.com/*'))		return P;
-	if (shExpMatch(url, 'https://www.google.com/*'))	return H;
 	if (host == 'ssl.gstatic.com')						return D;
 	if (host == 'www.gstatic.com')						return D;
-	if (host == 'accounts.google.com')					return H;
-	if (host == 'mail.google.com')						return H;
-	if (host == 'mail-attachment.googleusercontent.com')	return H;
-	if (host == 'plus.google.com')						return P;
+	if (host == 'calendar.google.com')					return D;
+	if (host == 'clients1.google.com')					return D;
+	if (host == 'clients2.google.com')					return D;
+	if (host == 'clients3.google.com')					return D;
+	if (host == 'clients4.google.com')					return D;
+	if (host == 'talk.google.com')						return D;
+	if (host == 'ssl.gstatic.com')						return D;
+	if (host == 'mail.google.com')						return D;
 	if (dnsDomainIs(host, 'googleusercontent.com'))		return D;
 
 	// reddit
@@ -361,6 +352,7 @@ function FindProxyForURL(url,host){
 
 	// 
 	if (dnsDomainIs(host,'adobe.com'))			return D;
+	if (dnsDomainIs(host,'digg.com'))			return D;
 	if (dnsDomainIs(host,'deviantart.com'))		return D;
 	if (dnsDomainIs(host,'deviantart.net'))		return D;
 	if (dnsDomainIs(host,'evernote.com'))		return D;
@@ -371,6 +363,8 @@ function FindProxyForURL(url,host){
 	if (dnsDomainIs(host,'paypal.com'))			return D;
 	if (dnsDomainIs(host,'paypalobjects.com'))	return D;
 	if (dnsDomainIs(host,'slidesharecdn.com'))	return D;
+	if (dnsDomainIs(host,'windows.net'))		return D;
+	
 	
 	if (host == 'xingongju.com')				return D;
 	if (host == 'link-server.opera.com')		return D;
