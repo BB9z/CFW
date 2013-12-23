@@ -28,23 +28,21 @@
 	默认行为
 */
 
-var DefaultLocalProxyPort = "8080";
-var P = "PROXY 127.0.0.1:" + DefaultLocalProxyPort + ", DIRECT";
-var D = "DIRECT";
-// var N = "DENY"
-var N = "PROXY 0.0.0.0";
-
-// 可访问，但使用代理访问速度大大提高
-var F = P;
-
-// Host available
-var H = D;
-
+// 配置项
 var RFConfig = {
+	proxyPort: 		"8080",				// 代理端口
+	isSockProxy: 	false,				// 代理是否是SOCKS，否则为HTTP代理
+	fallbackToDirectWhenProxyNotAvailable: false,	// 当代理不可用时，自动直接连接
+	
+	// 自定义代理规则，非假将忽略上方规则
+	// 如："PROXY: loaclhost:8888"，"SOCKS: 1.2.3.4:22; DIRECT"
+	customProxyDefine: false,
+	
+	onlyEnableHTTP:	true,				// 只在http/https协议下使用代理
 	blockAd:		true,				// 是否屏蔽广告
 	blockTracker:	true,				// 是否屏蔽网站跟踪
 	blockShareService:	true,			// 是否屏蔽分享服务
-	onlyEnableHTTP:	true				// 只在http/https协议下使用代理
+	blockRedirect: "PROXY 0.0.0.0"		// 将屏蔽内容重定向到何处
 };
 
 // 处理后的IP-to-Country数据，大陆及香港IP有近2000条
@@ -156,7 +154,26 @@ CNAndHKIpDict.k221	= [[3707764736,3708600319], [3708616704,3708813311], [3715674
 CNAndHKIpDict.k222	= [[3725590528,3730833407], [3732733952,3732799487], [3732832256,3732865023], [3732930560,3733979135], [3735027712,3735289855], [3735420928,3735551999], [3735552000,3739222015], [3740270592,3740925951]];
 CNAndHKIpDict.k223	= [[3741319168,3742367743], [3742367744,3742629887], [3742629888,3742760959], [3743035392,3743039487], [3743129600,3743130623], [3743135744,3743136767], [3743283200,3743284223], [3745513472,3749052415], [3749052416,3749183487], [3749183488,3749838847], [3749847040,3749855231], [3750756352,3752067071], [3752198144,3752329215], [3753902080,3754033151], [3754229760,3754295295], [3754295296,3754426367], [3754491904,3754688511], [3754950656,3755474943], [3755737088,3755868159], [3755978752,3755986943], [3755988992,3755990015], [3757047808,3757834239], [3757867008,3757899775], [3757965312,3758063615], [3758063616,3758079999], [3758091264,3758092287], [3758092288,3758093311], [3758095360,3758095871]];
 
-function FindProxyForURL(url,host){
+function FindProxyForURL(url, host) {
+	var D = "DIRECT";
+	var P;
+	if (RFConfig.customProxyDefine) {
+		P = RFConfig.customProxyDefine;
+	}
+	else {
+		if (RFConfig.isSockProxy) {
+			P = "SOCKS 127.0.0.1:" + RFConfig.proxyPort;
+		}
+		else {
+			P = "PROXY 127.0.0.1:" + RFConfig.proxyPort;
+		}
+	
+		if (RFConfig.fallbackToDirectWhenProxyNotAvailable) {
+			P = P + "; DIRECT";
+		}
+	}
+	var N = RFConfig.blockRedirect;
+	
 	// 跳过非http协议，当配置为系统级别时有用
 	if (RFConfig.onlyEnableHTTP && (url.substring(0,4) != 'http')) {
 		return D;
