@@ -22,6 +22,7 @@
 	禁封规则
 	CN域名<广谱>
 	网址规则
+	低优先规则<广谱>
 	IP直接访问<广谱>
 	域名不能被解析<广谱>
 	国内IP<广谱>
@@ -3646,9 +3647,6 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'cloudfront.net')) return D;
   if (dnsDomainIs(host, 'edgekey.net')) return D;
   if (dnsDomainIs(host, 'fastly.net')) return D;
-  if (shExpMatch(url, 'http://cdn.*')) return D;
-  if (shExpMatch(url, 'https://cdn.*')) return D;
-  if (shExpMatch(url, '*cdn.com/*')) return D;
 
   // 基础服务
   if (dnsDomainIs(host, 'amazonaws.com')) return D;
@@ -3675,6 +3673,7 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'fsdn.net')) return D;
   if (host == 'developers.google.com') return D;
   if (host == 'developers.android.com') return D;
+  if (host == 'cdn.sstatic.net') return P;
 
   // Apple
   if (dnsDomainIs(host, 'apple.com')) return D;
@@ -3736,6 +3735,12 @@ function FindProxyForURL(url, host) {
   if (host == 'www.downforeveryoneorjustme.com') return D;
   if (host == 'www.rescuetime.com') return D;
   if (dnsDomainIs(host, 'bitcoinwisdom.com')) return D;
+
+  /* 低优先广谱 */
+  // CDN
+  if (shExpMatch(url, 'http://cdn.*')) return D;
+  if (shExpMatch(url, 'https://cdn.*')) return D;
+  if (shExpMatch(url, '*cdn.com/*')) return D;
 
   /* @行为检测 */
   // IP直接访问
