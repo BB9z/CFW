@@ -3546,9 +3546,6 @@ function FindProxyForURL(url, host) {
 
   // Tracker
   if (RFConfig.blockTracker) {
-    // 放行 GA
-    if (dnsDomainIs(host, 'google-analytics.com')) return D;
-
     if (shExpMatch(url, 'http://analytics.*')) return N;
     if (shExpMatch(url, '*tracker.js')) return N;
 
@@ -3679,21 +3676,6 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'apple.com')) return D;
   if (dnsDomainIs(host, 'icloud.com')) return D;
   if (host == 'metrics.mzstatic.com') return D;
-
-  // Google
-  if (host == 'ssl.gstatic.com') return D;
-  if (host == 'www.gstatic.com') return D;
-  if (host == 'calendar.google.com') return D;
-  if (host == 'clients1.google.com') return D;
-  if (host == 'clients2.google.com') return D;
-  if (host == 'clients3.google.com') return D;
-  if (host == 'clients4.google.com') return D;
-  if (host == 'talk.google.com') return D;
-  if (host == 'safebrowsing.google.comm') return D;
-  if (host == 'safebrowsing-cache.google.com') return D;
-  if (host == 'ssl.gstatic.com') return D;
-  if (host == 'mail.google.com') return D;
-  if (dnsDomainIs(host, 'googleusercontent.com')) return D;
 
   // reddit
   if (dnsDomainIs(host, 'reddit.com')) return D;
