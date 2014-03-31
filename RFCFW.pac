@@ -3514,6 +3514,7 @@ function FindProxyForURL(url, host) {
       P = P + "; DIRECT";
     }
   }
+
   var N = RFConfig.blockRedirect;
 
   // 跳过非http协议，当配置为系统级别时有用
@@ -3558,6 +3559,7 @@ function FindProxyForURL(url, host) {
     if (dnsDomainIs(host, 'jiankongbao.com')) return N;
     if (host == 'lognormal.net') return N;
     if (dnsDomainIs(host, 'quantcast.com')) return N;
+    if (host == 'b.scorecardresearch.com') return N;
     if (dnsDomainIs(host, '51yes.com')) return N;
     if (dnsDomainIs(host, '51.la')) return N;
 
@@ -3574,7 +3576,8 @@ function FindProxyForURL(url, host) {
 
   // AD
   if (RFConfig.blockAd) {
-    // if (dnsDomainIs(host, 'doubleclick.net'))	return N;
+    if (dnsDomainIs(host, 'doubleclick.net'))	return N;
+    if (host == 'static.adzerk.net') return N;
     if (dnsDomainIs(host, 'rubiconproject.com')) return N;
     if (host == 'ads.pubmatic.com') return N;
   }
@@ -3594,7 +3597,6 @@ function FindProxyForURL(url, host) {
   // 未分类
   if (host == 'static.woopra.com') return N;
   if (host == 'a.analytics.yahoo.com') return N;
-  if (host == 'b.scorecardresearch.com') return N;
   if (host == 'clicktale.net') return N;
   if (host == 'ping.chartbeat.net') return N;
   if (host == 'ads2.msads.net') return N;
@@ -3604,7 +3606,6 @@ function FindProxyForURL(url, host) {
   if (host == 'img.uu1001.cn') return N;
   if (host == 'stats.buysellads.com') return N;
   if (host == 'adsrv.deviantart.com') return N;
-  if (host == 'static.adzerk.net') return N;
   if (host == 'adn.fusionads.net') return N;
   if (host == 'synad2.nuffnang.com.cn') return N;
   if (host == 'www.59.cn') return N;
@@ -3710,7 +3711,6 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'paypalobjects.com')) return D;
   if (dnsDomainIs(host, 'slidesharecdn.com')) return D;
   if (dnsDomainIs(host, 'windows.net')) return D;
-
 
   if (host == 'xingongju.com') return D;
   if (host == 'link-server.opera.com') return D;
