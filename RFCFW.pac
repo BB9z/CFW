@@ -3644,6 +3644,7 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'aspnetcdn.com')) return D;
   if (dnsDomainIs(host, 'cloudfront.net')) return D;
   if (dnsDomainIs(host, 'edgekey.net')) return D;
+  if (host == 'github.global.ssl.fastly.net') return P;
   if (dnsDomainIs(host, 'fastly.net')) return D;
 
   // 基础服务
@@ -3667,7 +3668,6 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'github.com')) return D;
   if (dnsDomainIs(host, 'github.io')) return D;
   if (host == 'collector.githubapp.com') return D;
-  if (host == 'code.google.com') return D;
   if (dnsDomainIs(host, 'fsdn.net')) return D;
   if (host == 'developers.google.com') return D;
   if (host == 'developers.android.com') return D;
@@ -3710,6 +3710,7 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'paypal.com')) return D;
   if (dnsDomainIs(host, 'paypalobjects.com')) return D;
   if (dnsDomainIs(host, 'slidesharecdn.com')) return D;
+  if (dnsDomainIs(host, 'dl.sourceforge.net')) return D;
   if (dnsDomainIs(host, 'windows.net')) return D;
 
   if (host == 'xingongju.com') return D;
