@@ -3580,6 +3580,7 @@ function FindProxyForURL(url, host) {
     if (host == 'static.adzerk.net') return N;
     if (dnsDomainIs(host, 'rubiconproject.com')) return N;
     if (host == 'ads.pubmatic.com') return N;
+    if (host == 'www.superfish.com') return N;
   }
 
   // Share
@@ -3651,6 +3652,7 @@ function FindProxyForURL(url, host) {
   if (dnsDomainIs(host, 'amazonaws.com')) return D;
   if (dnsDomainIs(host, 'disqus.com')) return D;
   if (dnsDomainIs(host, 'disquscdn.com')) return D;
+  if (host == 'ajax.googleapis.com') return P;
   if (dnsDomainIs(host, 'gravatar.com')) return D;
   if (dnsDomainIs(host, 'typekit.net')) return D;
   if (dnsDomainIs(host, 'verisign.com')) return D;
@@ -3665,6 +3667,7 @@ function FindProxyForURL(url, host) {
   if (shExpMatch(url, 'https://duckduckgo.com/*')) return D;
 
   // developer
+  if (host == 'gist.github.com') return P;
   if (dnsDomainIs(host, 'github.com')) return D;
   if (dnsDomainIs(host, 'github.io')) return D;
   if (host == 'collector.githubapp.com') return D;
