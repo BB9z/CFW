@@ -1,7 +1,7 @@
 /*!
 	RFCFW.pac
 	
-	(c) 2012-2014 BB9z
+	(c) 2012-2015 BB9z
 	https://github.com/BB9z/CFW
 	
 	某些过时浏览器可能不支持Unicode编码的PAC文件，请尝试自行转换为ANSI
@@ -43,7 +43,7 @@ var RFConfig = {
   blockAd: true, // 是否屏蔽广告
   blockTracker: true, // 是否屏蔽网站跟踪
   blockShareService: true, // 是否屏蔽分享服务
-  blockRedirect: "PROXY 0.0.0.0" // 将屏蔽内容重定向到何处
+  blockRedirect: "PROXY 0.0.0.0:1" // 将屏蔽内容重定向到何处
 };
 
 // 处理后的IP-to-Country数据，大陆及香港IP有近2000条
